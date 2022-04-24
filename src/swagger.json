@@ -1,0 +1,338 @@
+{
+    "openapi":"3.0.2",
+    "info": {
+      "title":"API Title",
+      "version":"1.0"
+    },
+    "servers": [
+      {"url":"http://localhost:3333"}
+    ],
+    "paths": {
+      "/users": {
+        "post": {
+          "tags": ["users"],
+          "summary": "Cria um novo usuário.",
+          "description": "Cria um novo usuário.",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "name": "Samuel Damasceno Filho",
+                    "email": "samuel@teste.com.br"
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Usuário criado com sucesso.",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "id": "85cd4607-c683-41ea-9ebd-cd0306456aed",
+                    "admin": false,
+                    "name": "Samuel Damasceno Filho",
+                    "email": "samuel@teste.com.br",
+                    "created_at": "2022-04-24T16:31:58.231Z",
+                    "updated_at": "2022-04-24T16:31:58.231Z"
+                  },
+                  "schema": {
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "admin": {
+                        "type": "boolean"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "string"
+                      },
+                      "updated_at": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "E-mail já está sendo utilizado",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": "E-mail already taken."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "get" : {
+          "tags": ["users"],
+          "summary": "Retorna todos os usuários",
+          "description": "Retorna todos os usuários se for um administrador requisitando.",
+          "parameters": [{
+            "in": "header",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "string($uuid)"
+            }
+          }],
+          "responses": {
+            "200": {
+              "description": "Operação realizada com sucesso",
+              "content": {
+                "application/json": {
+                  "example": [
+                    {
+                      "id": "85cd4607-c683-41ea-9ebd-cd0306456aed",
+                      "admin": false,
+                      "name": "Samuel Damasceno Filho",
+                      "email": "samuel@teste.com.br",
+                      "created_at": "2022-04-24T16:31:58.231Z",
+                      "updated_at": "2022-04-24T16:31:58.231Z"
+                    },
+                    {
+                      "id": "85cd4607-c683-41ea-9ebd-cd0306456aef",
+                      "admin": true,
+                      "name": "Marina Silva Rocha Damasceno",
+                      "email": "marina@teste.com.br",
+                      "created_at": "2022-03-24T12:24:15.486Z",
+                      "updated_at": "2022-03-24T12:324:15.486Z"
+                    }
+                  ],
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Usuário não tem permissão de administrador",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": "User does not an admin."
+                  },
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/users/{user_id}": {
+        "get" : {
+          "tags": ["users"],
+          "summary": "Retorna usuário específico",
+          "description": "Retorna usuário com ID equivalente.",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "user_id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Opereção realiazada com sucesso.",
+              "content": {
+                "application/json": {
+                  "example": {
+                      "id": "85cd4607-c683-41ea-9ebd-cd0306456aed",
+                      "admin": false,
+                      "name": "Samuel Damasceno Filho",
+                      "email": "samuel@teste.com.br",
+                      "created_at": "2022-04-24T16:31:58.231Z",
+                      "updated_at": "2022-04-24T16:31:58.231Z"
+                  },
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "admin": {
+                          "type": "boolean"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "type": "string"
+                        },
+                        "updated_at": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Usuário não encontrado",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": "User does not exist."
+                  },
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }             
+          }
+        }
+      },
+      "/users/{user_id}/admin": {
+        "patch": {
+          "tags": ["users"],
+          "summary": "Altera usuário para administrador",
+          "description": "Usuário com ID equivalente é modificado para se tornar administrador.",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "user_id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "name": "Samuel Damasceno Filho",
+                    "email": "samuel@teste.com.br"
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Usuário tornou administrador com sucesso.",
+              "content": {
+                "application/json": {
+                  "example": {
+                      "id": "85cd4607-c683-41ea-9ebd-cd0306456aed",
+                      "admin": false,
+                      "name": "Samuel Damasceno Filho",
+                      "email": "samuel@teste.com.br",
+                      "created_at": "2022-04-24T16:31:58.231Z",
+                      "updated_at": "2022-04-24T16:31:58.231Z"
+                  },
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "admin": {
+                          "type": "boolean"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "type": "string"
+                        },
+                        "updated_at": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Usuário não encontrado",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": "User does not exist."
+                  },
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
